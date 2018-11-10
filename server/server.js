@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+// Import routes
+const users = require('./routes/users');
+
 const app = express();
 const mongoose = require('mongoose');
 require('dotenv').config();
@@ -20,6 +23,9 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// Use routes
+app.use('/api/users', users);
 
 // Express server running
 const port = process.env.PORT || 3002;
