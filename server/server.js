@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 
 // Import routes
 const users = require('./routes/api/users');
+const products = require('./routes/api/products');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -26,6 +27,7 @@ app.use(cookieParser());
 
 // Use routes
 app.use('/api/users', users);
+app.use('/api/products', products);
 
 // Express server running
 const port = process.env.PORT || 3002;
