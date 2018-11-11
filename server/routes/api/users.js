@@ -67,4 +67,18 @@ router.post('/login', (req, res) => {
 	});
 });
 
+// @route   GET api/users/logout
+// @desc    Logout a user with auth middleware
+// @access  Private
+router.get('/logout', auth, (req, res) => {
+	User.findOneAndUpdate({ _id: req.user._id }, { token: '' }, (err, doc) => {
+		if (err)
+			return res.json({
+				success: false,
+				err
+			});
+		return res.status(200).json({ success: true });
+	});
+});
+
 module.exports = router;
