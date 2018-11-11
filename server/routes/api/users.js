@@ -4,6 +4,25 @@ const router = express.Router();
 // Load User Model
 const { User } = require('../../models/User');
 
+// Auth middleware
+const { auth } = require('../../middleware/auth');
+
+// @route   GET api/users/auth
+// @desc    Route if token is valid, checking in react is User is authenticated
+// @access  Private
+router.get('/auth', auth, (req, res) => {
+	res.status(200).json({
+		isAdmin: req.user.role === 0 ? false : true,
+		isAuth: true,
+		email: req.user.email,
+		name: req.user.name,
+		lastName: req.user.lastName,
+		role: req.user.role,
+		cart: req.user.cart,
+		history: req.user.history
+	});
+});
+
 // @route   POST api/users/register
 // @desc    Register a user
 // @access  Public
@@ -12,8 +31,7 @@ router.post('/register', (req, res) => {
 	user.save((err, doc) => {
 		if (err) return res.json({ success: false, err });
 		return res.status(200).json({
-			success: true,
-			userData: doc
+			success: true
 		});
 	});
 });
