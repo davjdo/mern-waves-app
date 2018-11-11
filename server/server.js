@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
 // Import routes
-const users = require('./routes/users');
+const users = require('./routes/api/users');
 
 const app = express();
 const mongoose = require('mongoose');
