@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
 
-// Load Brand and Wood models
+// Load Brand, Wood and Product models
 const { Brand } = require('../../models/Brand');
 const { Wood } = require('../../models/Wood');
+const { Product } = require('../../models/Product');
 
 // Auth and Admin middleware
 const { auth } = require('../../middleware/auth');
 const { admin } = require('../../middleware/admin');
+
+/**
+|--------------------------------------------------
+|											Brand
+|--------------------------------------------------
+*/
 
 // @route   GET api/products/brands
 // @desc    GET brands
@@ -33,6 +40,12 @@ router.post('/brand', auth, admin, (req, res) => {
 	});
 });
 
+/**
+|--------------------------------------------------
+|											Wood
+|--------------------------------------------------
+*/
+
 // @route   GET api/products/woods
 // @desc    GET woods
 // @access  Private
@@ -53,6 +66,26 @@ router.post('/wood', auth, admin, (req, res) => {
 		return res.status(200).json({
 			success: true,
 			wood: doc
+		});
+	});
+});
+
+/**
+|--------------------------------------------------
+|											Product 
+|--------------------------------------------------
+*/
+
+// @route   POST api/products/article
+// @desc    Add an article product
+// @access  Private
+router.post('/article', auth, admin, (req, res) => {
+	const product = new Product(req.body);
+	product.save((err, doc) => {
+		if (err) return res.json({ success: false, err });
+		return res.status(200).json({
+			success: true,
+			article: doc
 		});
 	});
 });
