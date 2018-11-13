@@ -91,6 +91,25 @@ router.post('/article', auth, admin, (req, res) => {
 	});
 });
 
+// @route   GET api/products/articles?sortBy=createdAt&order=desc&limit=4&skip=2
+// 					Or api/products/articles?sortBy=sold&order=desc&limit=4
+// @desc    Get article products by arrival (most recent to former) or by sell
+// @access  Private
+router.get('/articles', (req, res) => {
+	let order = req.query.order ? req.query.order : 'asc';
+	let sortBy = req.query.sortBy ? req.query.sortBy : '_id';
+	let limit = req.query.limit ? parseInt(req.query.limit) : 100;
+	Product.find()
+		.populate('brand')
+		.populate('wood')
+		.sort([[sortBy, order]])
+		.limit(limit)
+		.exec((err, articles) => {
+			if (err) return res.status(400).send(err);
+			return res.send(articles);
+		});
+});
+
 // @route   GET api/products/articles_by_id?id=fshfnd,dsds,dsds&type=array
 // @desc    Get article products by id (query string)
 // @access  Private
