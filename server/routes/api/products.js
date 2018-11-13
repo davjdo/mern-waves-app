@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 
 // Load Brand, Wood and Product models
 const { Brand } = require('../../models/Brand');
@@ -88,6 +89,27 @@ router.post('/article', auth, admin, (req, res) => {
 			article: doc
 		});
 	});
+});
+
+// @route   GET api/products/articles_by_id?id=fshfnd,dsds,dsds&type=array
+// @desc    Get article products by id (query string)
+// @access  Private
+router.get('/articles_by_id', (req, res) => {
+	let type = req.query.type;
+	let items = req.query.id;
+	if (type === 'array') {
+		let ids = req.query.id.split(',');
+		items = [];
+		items = ids.map(item => {
+			return mongoose.Types.ObjectId(item);
+		});
+	}
+	Product.find({ _id: { $in: items } })
+		.populate('brand')
+		.populate('wood')
+		.exec((err, docs) => {
+			return res.status(200).send(docs);
+		});
 });
 
 module.exports = router;
