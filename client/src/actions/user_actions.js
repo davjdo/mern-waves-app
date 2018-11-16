@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_LOGIN } from './types';
+import { LOGIN_USER, REGISTER_USER } from './types';
 import { USER_SERVER } from '../components/utils/misc';
 
 export function loginUser(dataToSubmit) {
@@ -7,7 +7,17 @@ export function loginUser(dataToSubmit) {
 		.post(`${USER_SERVER}/login`, dataToSubmit)
 		.then(response => response.data);
 	return {
-		type: USER_LOGIN,
+		type: LOGIN_USER,
+		payload: request
+	};
+}
+
+export function registerUser(dataToSubmit) {
+	const request = axios
+		.post(`${USER_SERVER}/register`, dataToSubmit)
+		.then(response => response.data);
+	return {
+		type: REGISTER_USER,
 		payload: request
 	};
 }
