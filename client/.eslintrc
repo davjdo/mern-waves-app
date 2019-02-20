@@ -21,6 +21,7 @@
     "strict": ["error", "global"],
     "curly": "warn",
     "no-unused-vars": "off",
-    "no-useless-escape": "off"
+    "no-useless-escape": "off",
+    "no-mixed-spaces-and-tabs": "off" 
   }
 }
