@@ -10,8 +10,8 @@ import {
 
 class Home extends Component {
 	componentDidMount() {
-		this.props.getProductsBySell().then();
-		this.props.getProductsByArrival().then();
+		this.props.getProductsBySell();
+		this.props.getProductsByArrival();
 	}
 
 	render() {
