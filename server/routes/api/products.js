@@ -77,6 +77,42 @@ router.post('/wood', auth, admin, (req, res) => {
 |--------------------------------------------------
 */
 
+// @route   POST api/products/shop
+// @desc    Get article products to shop with filtering
+// @access  Public
+router.post('/shop', (req, res) => {
+	let order = req.body.order ? req.body.order : 'desc';
+	let sortBy = req.body.sortBy ? req.body.sortBy : '_id';
+	let limit = req.body.limit ? parseInt(req.body.limit) : 100;
+	let skip = parseInt(req.body.skip);
+	let filters = req.body.filters;
+	let findArgs = {};
+	for (let key in filters) {
+		if (filters[key].length > 0) {
+			if (key === 'price') {
+				findArgs[key] = {
+					$gte: filters[key][0],
+					$lte: filters[key][1]
+				};
+			} else {
+				findArgs[key] = filters[key];
+			}
+		}
+	}
+	Product.find(findArgs)
+		.populate('brand')
+		.populate('wood')
+		.sort([[sortBy, order]])
+		.limit(limit)
+		.exec((err, articles) => {
+			if (err) return res.status(400).send(err);
+			return res.status(200).json({
+				size: articles.length,
+				articles
+			});
+		});
+});
+
 // @route   POST api/products/article
 // @desc    Add an article product
 // @access  Private
