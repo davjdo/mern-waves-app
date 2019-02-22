@@ -20,7 +20,7 @@ const { admin } = require('../../middleware/admin');
 // @route   GET api/products/brands
 // @desc    GET brands
 // @access  Private
-router.get('/brands', auth, admin, (req, res) => {
+router.get('/brands', (req, res) => {
 	Brand.find({}, (err, brands) => {
 		if (err) return res.status(400).send(err);
 		return res.status(200).send(brands);
@@ -50,7 +50,7 @@ router.post('/brand', auth, admin, (req, res) => {
 // @route   GET api/products/woods
 // @desc    GET woods
 // @access  Private
-router.get('/woods', auth, admin, (req, res) => {
+router.get('/woods', (req, res) => {
 	Wood.find({}, (err, woods) => {
 		if (err) return res.status(400).send(err);
 		return res.status(200).send(woods);
