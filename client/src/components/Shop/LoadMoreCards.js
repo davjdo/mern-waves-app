@@ -8,6 +8,11 @@ class LoadMoreCards extends Component {
 				<div>
 					<CardBlockShop grid={this.props.grid} list={this.props.products} />
 				</div>
+				{this.props.size > 0 && this.props.size >= this.props.limit ? (
+					<div className="load_more_container">
+						<span onClick={() => this.props.loadMore()}>Load More</span>
+					</div>
+				) : null}
 			</div>
 		);
 	}

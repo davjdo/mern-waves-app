@@ -103,6 +103,7 @@ router.post('/shop', (req, res) => {
 		.populate('brand')
 		.populate('wood')
 		.sort([[sortBy, order]])
+		.skip(skip)
 		.limit(limit)
 		.exec((err, articles) => {
 			if (err) return res.status(400).send(err);

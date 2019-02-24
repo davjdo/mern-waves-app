@@ -63,6 +63,22 @@ class Shop extends Component {
 		});
 	};
 
+	loadMoreCards = () => {
+		let skip = this.state.skip + this.state.limit;
+		this.props
+			.getProductsToShop(
+				skip,
+				this.state.limit,
+				this.state.filters,
+				this.props.products.toShop
+			)
+			.then(() => {
+				this.setState({
+					skip
+				});
+			});
+	};
+
 	render() {
 		const products = this.props.products;
 		return (
@@ -106,7 +122,7 @@ class Shop extends Component {
 									limit={this.state.limit}
 									size={products.toShopSize}
 									products={products.toShop}
-									loadMore={() => console.log('load more')}
+									loadMore={() => this.loadMoreCards()}
 								/>
 							</div>
 						</div>
