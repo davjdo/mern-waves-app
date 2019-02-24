@@ -10,7 +10,7 @@ import Register from './components/Register_Login/Register';
 import Shop from './components/Shop';
 
 import UserDashboard from './components/User';
-
+import AddProduct from './components/User/Admin/AddProduct';
 const Routes = () => {
 	return (
 		<Layout>
@@ -19,6 +19,11 @@ const Routes = () => {
 					exact
 					path="/user/dashboard"
 					component={Auth(UserDashboard, true)}
+				/>
+				<Route
+					exact
+					path="/admin/add_product"
+					component={Auth(AddProduct, true)}
 				/>
 				<Route exact path="/register" component={Auth(Register, false)} />
 				<Route
