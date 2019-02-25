@@ -1,11 +1,14 @@
 const express = require('express');
+const formidable = require('express-formidable');
+const cloudinary = require('cloudinary');
 const router = express.Router();
 
 // Load User Model
 const { User } = require('../../models/User');
 
-// Auth middleware
+// Auth and Admin middleware
 const { auth } = require('../../middleware/auth');
+const { admin } = require('../../middleware/admin');
 
 // @route   GET api/users/auth
 // @desc    Route if token is valid, checking in react is User is authenticated
@@ -78,6 +81,40 @@ router.get('/logout', auth, (req, res) => {
 				err
 			});
 		return res.status(200).json({ success: true });
+	});
+});
+
+// @route POST api/users/uploadimage
+// @desc Add an image
+// @access Private
+router.post('/uploadimage', auth, admin, formidable(), (req, res) => {
+	cloudinary.uploader.upload(
+		req.files.file.path,
+		result => {
+			res.status(200).send({
+				public_id: result.public_id,
+				url: result.url
+			});
+		},
+		{
+			public_id: `${Date.now()}`,
+			ressource_type: 'auto'
+		}
+	);
+});
+
+// @route GET api/users/removeimage?^public_id=${id}
+// @desc Remove an image
+// @access Private
+router.get('/removeimage', auth, admin, (req, res) => {
+	let public_id = req.query.public_id;
+	cloudinary.uploader.destroy(public_id, (error, result) => {
+		if (error)
+			return res.json({
+				success: false,
+				error
+			});
+		res.status(200).send('ok');
 	});
 });
 
