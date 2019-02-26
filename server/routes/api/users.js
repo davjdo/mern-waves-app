@@ -98,7 +98,8 @@ router.post('/uploadimage', auth, admin, formidable(), (req, res) => {
 		},
 		{
 			public_id: `${Date.now()}`,
-			ressource_type: 'auto'
+			ressource_type: 'auto',
+			folder: 'waves'
 		}
 	);
 });
