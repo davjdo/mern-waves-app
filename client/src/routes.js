@@ -8,6 +8,7 @@ import Home from './components/Home';
 import RegisterLogin from './components/Register_Login';
 import Register from './components/Register_Login/Register';
 import Shop from './components/Shop';
+import ProductPage from './components/Product';
 
 import UserDashboard from './components/User';
 import AddProduct from './components/User/Admin/AddProduct';
@@ -37,6 +38,11 @@ const Routes = () => {
 					exact
 					path="/register_login"
 					component={Auth(RegisterLogin, false)}
+				/>
+				<Route
+					exact
+					path="/product_detail/:id"
+					component={Auth(ProductPage, null)}
 				/>
 				<Route exact path="/shop" component={Auth(Shop, null)} />
 				<Route exact path="/" component={Auth(Home, null)} />
