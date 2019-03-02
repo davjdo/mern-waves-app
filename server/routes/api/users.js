@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 // Load User Model
 const { User } = require('../../models/User');
+const { Product } = require('../../models/Product');
 
 // Auth and Admin middleware
 const { auth } = require('../../middleware/auth');
@@ -122,17 +123,15 @@ router.get('/removeimage', auth, admin, (req, res) => {
 
 // @route   POST api/users/add-to-cart
 // @desc    add a product to cart
-// @access  Public
+// @access  Private
 router.post('/add-to-cart', auth, (req, res) => {
 	User.findOne({ _id: req.user._id }, (err, doc) => {
 		let duplicate = false;
-
 		doc.cart.forEach(item => {
 			if (item.id == req.query.productId) {
 				duplicate = true;
 			}
 		});
-
 		if (duplicate) {
 			User.findOneAndUpdate(
 				{
@@ -166,6 +165,38 @@ router.post('/add-to-cart', auth, (req, res) => {
 			);
 		}
 	});
+});
+
+// @route   POST api/users/remove-from-cart
+// @desc    remove a product from cart
+// @access  Private
+router.get('/remove-from-cart', auth, (req, res) => {
+	User.findByIdAndUpdate(
+		{ _id: req.user._id },
+		{
+			$pull: {
+				cart: {
+					id: mongoose.Types.ObjectId(req.query._id)
+				}
+			}
+		},
+		{ new: true },
+		(err, doc) => {
+			let cart = doc.cart;
+			let array = cart.map(item => {
+				return mongoose.Types.ObjectId(item.id);
+			});
+			Product.find({ _id: { $in: array } })
+				.populate('brand')
+				.populate('wood')
+				.exec((err, cartDetail) => {
+					res.status(200).json({
+						cartDetail,
+						cart
+					});
+				});
+		}
+	);
 });
 
 module.exports = router;
