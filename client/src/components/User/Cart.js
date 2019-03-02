@@ -3,7 +3,7 @@ import UserLayout from '../../hoc/UserLayout';
 import UserProductBlock from '../utils/User/ProductBlock';
 import { connect } from 'react-redux';
 import { getCartItems } from '../../actions/user_actions';
-import FontAwesomeIcon from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFrown, faSmile } from '@fortawesome/free-solid-svg-icons';
 
 class Cart extends Component {
@@ -24,12 +24,34 @@ class Cart extends Component {
 				});
 				this.props
 					.getCartItems(cartItems, user.userData.cart)
-					.then(response => {});
+					.then(response => {
+						if (this.props.user.cartDetail.length > 0) {
+							this.calculateTotal(this.props.user.cartDetail);
+						}
+					});
 			}
 		}
 	}
 
+	calculateTotal = cartDetail => {
+		let total = 0;
+		cartDetail.forEach(item => {
+			total += parseInt(item.price, 10) * item.quantity;
+		});
+		this.setState({
+			total,
+			showTotal: true
+		});
+	};
+
 	removeFromCart = id => {};
+
+	showNoItemMessage = () => (
+		<div className="cart_no_items">
+			<FontAwesomeIcon icon={faFrown} />
+			<div>you have no items</div>
+		</div>
+	);
 
 	render() {
 		return (
@@ -42,7 +64,25 @@ class Cart extends Component {
 							type="cart"
 							removeItem={id => this.removeFromCart(id)}
 						/>
+						{this.state.showTotal ? (
+							<div>
+								<div className="user_cart_sum">
+									<div>Total amount : $ {this.state.total}</div>
+								</div>
+							</div>
+						) : this.state.showSuccess ? (
+							<div className="cart_success">
+								<FontAwesomeIcon icon={faSmile} />
+								<div>Thank you</div>
+								<div>Your order is now complete</div>
+							</div>
+						) : (
+							this.showNoItemMessage()
+						)}
 					</div>
+					{this.state.showTotal ? (
+						<div className="paypal_button_container">Paypal</div>
+					) : null}
 				</div>
 			</UserLayout>
 		);
