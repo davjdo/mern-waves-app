@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getCartItems, removeCartItems } from '../../actions/user_actions';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFrown, faSmile } from '@fortawesome/free-solid-svg-icons';
+import Paypal from '../utils/Paypal';
 
 class Cart extends Component {
 	state = {
@@ -61,6 +62,21 @@ class Cart extends Component {
 		</div>
 	);
 
+	transactionError = data => {
+		console.log('Paypal error');
+	};
+
+	transactionCancelled = data => {
+		console.log('Transaction cancelled');
+	};
+
+	transactionSuccess = data => {
+		this.setState({
+			showTotal: false,
+			showSuccess: true
+		});
+	};
+
 	render() {
 		return (
 			<UserLayout>
@@ -89,7 +105,14 @@ class Cart extends Component {
 						)}
 					</div>
 					{this.state.showTotal ? (
-						<div className="paypal_button_container">Paypal</div>
+						<div className="paypal_button_container">
+							<Paypal
+								toPay={this.state.total}
+								transactionError={data => this.transactionError(data)}
+								transactionCancelled={data => this.transactionCancelled(data)}
+								onSuccess={data => this.transactionSuccess(data)}
+							/>
+						</div>
 					) : null}
 				</div>
 			</UserLayout>
