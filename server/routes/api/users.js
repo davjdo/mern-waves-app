@@ -272,8 +272,23 @@ router.post('/success-buy', auth, (req, res) => {
 			});
 		}
 	);
+});
 
-	//
+// @route   POST api/users/update-profile
+// @desc add route to update user personal information
+// @access  Private
+router.post('/update-profile', auth, (req, res) => {
+	User.findOneAndUpdate(
+		{ _id: req.user._id },
+		{
+			$set: req.body
+		},
+		{ new: true },
+		(err, doc) => {
+			if (err) return res.json({ success: false, err });
+			res.status(200).send({ success: true });
+		}
+	);
 });
 
 module.exports = router;
