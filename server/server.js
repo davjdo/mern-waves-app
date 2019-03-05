@@ -7,6 +7,7 @@ const cors = require('cors');
 // Import routes
 const users = require('./routes/api/users');
 const products = require('./routes/api/products');
+const site = require('./routes/api/site');
 
 const app = express();
 const mongoose = require('mongoose');
@@ -33,6 +34,7 @@ cloudinary.config({
 // Use routes
 app.use('/api/users', users);
 app.use('/api/products', products);
+app.use('/api/site', site);
 
 // Express server running
 const port = process.env.PORT || 3002;
