@@ -24,6 +24,7 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(express.static('client/build'));
 app.use(cors());
 cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
@@ -35,6 +36,14 @@ cloudinary.config({
 app.use('/api/users', users);
 app.use('/api/products', products);
 app.use('/api/site', site);
+
+// Serve static assets if in production mode
+if (process.env.NODE_ENV === 'production') {
+	const path = require('path');
+	app.get('/*', (req, res) => {
+		res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'));
+	});
+}
 
 // Express server running
 const port = process.env.PORT || 3002;
