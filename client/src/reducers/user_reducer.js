@@ -58,7 +58,7 @@ export default function(state = {}, action) {
 			return {
 				...state,
 				successBuy: action.payload.success,
-				userDate: {
+				userData: {
 					...state.userData,
 					cart: action.payload.cart
 				},
