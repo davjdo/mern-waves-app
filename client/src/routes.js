@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Layout from './hoc/Layout';
+import PageNotFound from './components/utils/PageNotFound';
 import Auth from './hoc/Auth';
 
 import Home from './components/Home';
@@ -60,6 +61,7 @@ const Routes = () => {
 				/>
 				<Route exact path="/shop" component={Auth(Shop, null)} />
 				<Route exact path="/" component={Auth(Home, null)} />
+				<Route component={Auth(PageNotFound, null)} />
 			</Switch>
 		</Layout>
 	);
