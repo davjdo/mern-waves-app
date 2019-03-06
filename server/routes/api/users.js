@@ -14,6 +14,9 @@ const { Payment } = require('../../models/Payment');
 const { auth } = require('../../middleware/auth');
 const { admin } = require('../../middleware/admin');
 
+// Utils
+const { sendEmail } = require('../../utils/mail/index');
+
 // @route   GET api/users/auth
 // @desc    Route if token is valid, checking in react is User is authenticated
 // @access  Private
@@ -37,6 +40,7 @@ router.post('/register', (req, res) => {
 	const user = new User(req.body);
 	user.save((err, doc) => {
 		if (err) return res.json({ success: false, err });
+		sendEmail(doc.email, doc.name, null, 'welcome');
 		return res.status(200).json({
 			success: true
 		});
