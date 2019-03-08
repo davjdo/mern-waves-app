@@ -5,6 +5,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const async = require('async');
 const SHA1 = require('crypto-js/sha1');
+const multer = require('multer');
 
 // Load User, Product and Payment Models
 const { User } = require('../../models/User');
@@ -17,6 +18,54 @@ const { admin } = require('../../middleware/admin');
 
 // Utils
 const { sendEmail } = require('../../utils/mail/index');
+
+// Multer
+let storage = multer.diskStorage({
+	destination: (req, file, cb) => {
+		cb(null, 'uploads/');
+	},
+	filename: (req, file, cb) => {
+		cb(null, `${Date.now()}_${file.originalname}`);
+	}
+	// fileFilter: (req, file, cb) => {
+	// 	const ext = path.extname(file.originalname);
+	// 	if (ext !== '.jpg' && ext !== '.png') {
+	// 		return cb(res.status(400).end('only jpg, png is allowed'), false);
+	// 	}
+	// 	cb(null, true);
+	// }
+});
+const upload = multer({ storage: storage }).single('file');
+
+// @route   POST api/users/uploadfile
+// @desc    Add a image to uploads/ directory with multer
+// @access  Private
+router.post('/uploadfile', auth, admin, (req, res) => {
+	upload(req, res, err => {
+		if (err) return res.json({ success: false, err });
+		return res.json({ success: true });
+	});
+});
+
+// @route   GET api/users/admin-files
+// @desc    Get images from uploads/ directory with multer
+// @access  Private
+const fs = require('fs');
+const path = require('path');
+router.get('/admin-files', auth, admin, (req, res) => {
+	const dir = path.resolve('.') + '/uploads/';
+	fs.readdir(dir, (err, items) => {
+		return res.status(200).send(items);
+	});
+});
+
+// @route   GET api/users/download/:id
+// @desc    Download images from uploads/ directory with multer
+// @access  Private
+router.get('/download/:id', auth, admin, (req, res) => {
+	const file = path.resolve('.') + `/uploads/${req.params.id}`;
+	res.download(file);
+});
 
 // @route   GET api/users/auth
 // @desc    Route if token is valid, checking in react is User is authenticated
