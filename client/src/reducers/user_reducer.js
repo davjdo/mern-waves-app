@@ -8,7 +8,9 @@ import {
 	REMOVE_CART_ITEMS_USER,
 	ON_SUCCESS_BUY_USER,
 	UPDATE_DATA_USER,
-	CLEAR_UPDATE_USER_DATA
+	CLEAR_UPDATE_USER_DATA,
+	RESET_USER,
+	RESET_PASSWORD
 } from '../actions/types';
 
 export default function(state = {}, action) {
@@ -73,6 +75,18 @@ export default function(state = {}, action) {
 			return {
 				...state,
 				updateUser: action.payload
+			};
+		}
+		case RESET_USER: {
+			return {
+				...state,
+				resetUser: action.payload
+			};
+		}
+		case RESET_PASSWORD: {
+			return {
+				...state,
+				resetPass: action.payload
 			};
 		}
 		default:

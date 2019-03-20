@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { resetUser } from '../../actions/user_actions';
 import FormField from '../utils/Form/FormField';
 import { update, generateData, isFormValid } from '../utils/Form/FormActions';
 
@@ -40,8 +41,8 @@ class ResetUser extends Component {
 		let dataToSubmit = generateData(this.state.formdata, 'ResetEmail');
 		let formIsValid = isFormValid(this.state.formdata, 'ResetEmail');
 		if (formIsValid) {
-			axios.post('/api/users/reset_user', dataToSubmit).then(response => {
-				if (response.data.success) {
+			this.props.resetUser(dataToSubmit).then(response => {
+				if (response.payload.success) {
 					this.setState({ formSuccess: true });
 					setTimeout(() => {
 						this.setState({ formSuccess: false });
@@ -84,4 +85,13 @@ class ResetUser extends Component {
 	}
 }
 
-export default ResetUser;
+const mapStateToProps = state => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(
+	mapStateToProps,
+	{ resetUser }
+)(ResetUser);

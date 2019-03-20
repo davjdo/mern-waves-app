@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { resetPass } from '../../actions/user_actions';
 import FormField from '../utils/Form/FormField';
 import { update, generateData, isFormValid } from '../utils/Form/FormActions';
 import {
@@ -68,16 +69,16 @@ class ResetPass extends Component {
 		let dataToSubmit = generateData(this.state.formdata, 'ResetPass');
 		let formIsValid = isFormValid(this.state.formdata, 'ResetPass');
 		if (formIsValid) {
-			axios
-				.post('/api/users/reset_password', {
+			this.props
+				.resetPass({
 					...dataToSubmit,
 					resetToken: this.state.resetToken
 				})
 				.then(response => {
-					if (!response.data.success) {
+					if (!response.payload.success) {
 						this.setState({
 							formError: true,
-							formErrorMessage: response.data.message
+							formErrorMessage: response.payload.message
 						});
 					} else {
 						this.setState({ formSuccess: true, formError: false });
@@ -136,4 +137,13 @@ class ResetPass extends Component {
 	}
 }
 
-export default ResetPass;
+const mapStateToProps = state => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(
+	mapStateToProps,
+	{ resetPass }
+)(ResetPass);
