@@ -142,6 +142,19 @@ router.get('/logout', auth, (req, res) => {
 	});
 });
 
+// @route   POST api/users/reset_user
+// @desc    Reset an user with an email
+// @access  Public
+router.post('/reset_user', (req, res) => {
+	User.findOne({ email: req.body.email }, (err, user) => {
+		user.generateResetToken((err, user) => {
+			if (err) return res.json({ success: false, err });
+			sendEmail(user.email, user.name, null, 'reset_password', user);
+			return res.json({ success: true });
+		});
+	});
+});
+
 // @route POST api/users/uploadimage
 // @desc Add an image
 // @access Private
