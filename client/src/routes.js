@@ -11,6 +11,7 @@ import Register from './components/Register_Login/Register';
 import Shop from './components/Shop';
 import ProductPage from './components/Product';
 import ResetUser from './components/Reset_User';
+import ResetPass from './components/Reset_User/ResetPass';
 
 import UserDashboard from './components/User';
 import AddProduct from './components/User/Admin/AddProduct';
@@ -53,6 +54,11 @@ const Routes = () => {
 				<Route exact path="/admin/add_file" component={Auth(AddFile, true)} />
 				<Route exact path="/register" component={Auth(Register, false)} />
 				<Route exact path="/reset_user" component={Auth(ResetUser, false)} />
+				<Route
+					exact
+					path="/reset_password/:token"
+					component={Auth(ResetPass, false)}
+				/>
 				<Route
 					exact
 					path="/register_login"
